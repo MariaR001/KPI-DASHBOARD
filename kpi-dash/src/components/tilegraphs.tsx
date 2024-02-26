@@ -1,38 +1,38 @@
 import React, { useState } from 'react';
+import BarGraphComponent from './BarGraphComponent';
+import ListComponent from './ListComponent';
+import NumberComponent from './NumberComponent';
 
-interface DashboardTileProps {
-  content: React.ReactNode;
-  onContentChange: (content: React.ReactNode) => void;
-}
+// i need this component to  give the user options on how to display their data
+// i.e. bar graph, list, number, etc
 
-const GraphTile: React.FC<DashboardTileProps> = ({ content, onContentChange }) => {
-  const [displayData, setDisplayData] = useState<boolean>(false);
+const GraphTile: React.FC = () => {
+  const [displayType, setDisplayType] = useState('barGraph');
+  const [data, setData] = useState([1, 2, 3, 4, 5]);
+  const [listData, setListData] = useState([
+    { label: 'Item 1', value: 1 },
+    { label: 'Item 2', value: 2 },
+    { label: 'Item 3', value: 3 },
+  ]);
 
-  const handleDisplayData = () => {
-   // Implement logic to prompt the user for graph options
-   const graphOptions = ['Bar Chart', 'Line Chart', 'Pie Chart'];
-   const selectedOption = window.prompt('Select Graph', graphOptions.join(', '));
-
-   // If the user selects a valid option
-   if (selectedOption && graphOptions.includes(selectedOption)) {
-     // Update content with selected graph
-     onContentChange(<div>{content}<br />Selected Graph: {selectedOption}</div>);
-   } else {
-     // Handle case where user cancels or selects invalid option
-      onContentChange(content);
-   }
-   
-   // Toggle displayData state
-   setDisplayData(prevState => !prevState);
-   console.log('test');
+  const handleDisplayTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setDisplayType(event.target.value);
   };
 
   return (
-    <div style={{ position: 'relative' }}>
-      {content}
-      <button onClick={handleDisplayData}>
-        {displayData ? 'Hide Data' : 'Display Data'}
-      </button>
+    <div>
+      <div>
+        <select value={displayType} onChange={handleDisplayTypeChange}>
+          <option value="barGraph">Bar Graph</option>
+          <option value="list">List</option>
+          <option value="number">Number</option>
+        </select>
+      </div>
+      <div>
+        {displayType === 'barGraph' && <BarGraphComponent data={data} />}
+        {displayType === 'list' && <ListComponent items={listData} />}
+        {displayType === 'number' && <NumberComponent value={data[0]} />}
+      </div>
     </div>
   );
 };

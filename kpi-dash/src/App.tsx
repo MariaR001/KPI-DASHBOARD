@@ -53,15 +53,9 @@ const MyGrid: React.FC = () => {
               <div className="remove" onClick={() => removeItem(item.i)}>
                 X
               </div>
-              <div className="tile-content" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }} >
-                <GraphTile
-                  content={
-                    <div style={{position: 'relative' }}>
-                      <center><h2>Tile {item.i}</h2></center>
-                    </div>
-                  }
-                  onContentChange={(content) => console.log(content)}
-                />
+              <div className="tile-content" style={{position: 'relative', left: '10%'}}>
+                <h2>Tile {item.i}</h2>
+                <GraphTile />
               </div>
             </div>
           ))}
