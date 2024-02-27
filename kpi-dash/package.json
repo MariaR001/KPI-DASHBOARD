@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "ts-node backend/server.ts",
+    "server": "npx tsx backend/server.ts",
     "client": "set PORT=3003 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

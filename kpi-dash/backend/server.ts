@@ -2,6 +2,12 @@ import express from "express";
 import * as YAML from "js-yaml";
 import * as fs from "fs";
 
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const app = express();
 
 app.use(express.json());
@@ -9,7 +15,9 @@ app.use(express.json());
 // GET /config
 app.get("/config", (req, res) => {
   try {
-    const config = YAML.load(fs.readFileSync("config.yml", "utf8"));
+    const config = YAML.load(
+      fs.readFileSync(`${__dirname}/dash-config.yml`, "utf8")
+    );
     res.json(config);
   } catch (error) {
     console.error("Error loading config", error);
@@ -21,7 +29,7 @@ app.get("/config", (req, res) => {
 app.post("/config", (req, res) => {
   try {
     const configString = YAML.dump(req.body);
-    fs.writeFileSync("config.yml", configString, "utf8");
+    fs.writeFileSync(`${__dirname}/dash-config.yml`, configString, "utf8");
     res.json({ message: "Config stored successfully" });
   } catch (error) {
     console.error("Error storing config", error);
