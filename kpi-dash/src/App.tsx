@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { Config } from "../backend/Types";
+import { Tile } from "../backend/Types";
 
-import * as YAML from "yaml";
+import YAML from "yaml";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 
@@ -10,31 +11,32 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const MyGrid: React.FC = () => {
   const [config, setConfig] = useState<Config | null>(null);
-  const [layout, setLayout] = useState([
-    { i: "1", x: 0, y: 0, w: 1, h: 2 },
-    { i: "2", x: 1, y: 0, w: 1, h: 2 },
-    { i: "3", x: 2, y: 0, w: 1, h: 2 },
-  ]);
+  const [layout, setLayout] = useState<Tile[]>([]);
 
   const onLayoutChange = (newLayout: any) => {
+    if (!newLayout) {
+      return;
+    }
+
     setLayout(newLayout);
 
     const newConfig: Config = {
-      tiles: newLayout.map((item: any) => {
-        return {
-          id: item.i,
-          x: item.x,
-          y: item.y,
-          width: item.w,
-          height: item.h,
-          representation: "",
-          dataset: "",
-        };
-      }),
+      tiles:
+        newLayout?.map((item: any) => {
+          return {
+            id: item.i,
+            x: item.x,
+            y: item.y,
+            width: item.w,
+            height: item.h,
+            representation: "",
+            dataset: "",
+          };
+        }) || [],
     };
 
     setConfig(newConfig);
-    storeConfig(newConfig);
+    // storeConfig(newConfig);
   };
 
   const loadConfig = async () => {
@@ -44,6 +46,7 @@ const MyGrid: React.FC = () => {
 
       const config: Config = YAML.parse(configString);
       setConfig(config);
+      setLayout(config.tiles);
     } catch (error) {
       console.error("Error loading config", error);
     }
@@ -65,7 +68,7 @@ const MyGrid: React.FC = () => {
     setLayout(layout.filter((item) => item.i !== i));
   };
 
-  if (config !== null) {
+  if (!config) {
     loadConfig();
   }
 
@@ -79,9 +82,9 @@ const MyGrid: React.FC = () => {
         rowHeight={100}
         onLayoutChange={onLayoutChange}
       >
-        {layout.map((item) => (
+        {layout?.map((item, index) => (
           <div
-            key={item.i}
+            key={index}
             style={{ border: "1px solid #ccc", position: "relative" }}
           >
             <span className="text">{item.i}</span>

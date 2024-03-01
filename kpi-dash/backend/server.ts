@@ -1,5 +1,6 @@
 import express from "express";
-import * as YAML from "js-yaml";
+import YAML from "js-yaml";
+import cors from "cors";
 import * as fs from "fs";
 
 import { fileURLToPath } from "url";
@@ -11,6 +12,7 @@ const __dirname = dirname(__filename);
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 // GET /config
 app.get("/config", (req, res) => {

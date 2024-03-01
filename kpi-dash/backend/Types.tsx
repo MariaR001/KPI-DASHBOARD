@@ -1,9 +1,9 @@
 type Tile = {
-  id: string;
+  i: string;
   x: number;
   y: number;
-  width: number;
-  height: number;
+  w: number;
+  h: number;
   representation: string;
   dataset: string;
 };
