@@ -18,17 +18,15 @@ const MyGrid: React.FC = () => {
       return;
     }
 
-    setLayout(newLayout);
-
     const newConfig: Config = {
       tiles:
         newLayout?.map((item: any) => {
           return {
-            id: item.i,
+            i: item.i,
             x: item.x,
             y: item.y,
-            width: item.w,
-            height: item.h,
+            w: item.w,
+            h: item.h,
             representation: "",
             dataset: "",
           };
@@ -36,7 +34,8 @@ const MyGrid: React.FC = () => {
     };
 
     setConfig(newConfig);
-    // storeConfig(newConfig);
+    storeConfig(newConfig);
+    loadConfig();
   };
 
   const loadConfig = async () => {
@@ -54,9 +53,12 @@ const MyGrid: React.FC = () => {
 
   const storeConfig = async (config: Config) => {
     try {
-      const configString = YAML.stringify(config);
+      const configString = JSON.stringify(config);
       await fetch("http://localhost:3002/config", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: configString,
       });
     } catch (error) {
@@ -82,26 +84,28 @@ const MyGrid: React.FC = () => {
         rowHeight={100}
         onLayoutChange={onLayoutChange}
       >
-        {layout?.map((item, index) => (
-          <div
-            key={index}
-            style={{ border: "1px solid #ccc", position: "relative" }}
-          >
-            <span className="text">{item.i}</span>
+        {layout?.map((item, index) => {
+          return (
             <div
-              className="remove"
-              onClick={() => removeItem(item.i)}
-              style={{
-                position: "absolute",
-                top: "5px",
-                right: "5px",
-                cursor: "pointer",
-              }}
+              key={index}
+              style={{ border: "1px solid #ccc", position: "relative" }}
             >
-              X
+              <span className="text">{item.i}</span>
+              <div
+                className="remove"
+                onClick={() => removeItem(item.i)}
+                style={{
+                  position: "absolute",
+                  top: "5px",
+                  right: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                X
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </ResponsiveGridLayout>
     </div>
   );
