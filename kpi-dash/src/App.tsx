@@ -3,7 +3,6 @@ import { Responsive, WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import './App.css';
-import GraphTile from './components/tilegraphs';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -19,7 +18,8 @@ const MyGrid: React.FC = () => {
   };
 
   const removeItem = (i: string) => {
-    setLayout(layout.filter((item) => item.i !== i));
+    const newLayout = layout.filter((item) => item.i !== i);
+    setLayout(newLayout); // Remove the item from the layout
   };
 
   const addItem = () => {
@@ -55,7 +55,6 @@ const MyGrid: React.FC = () => {
               </div>
               <div className="tile-content" style={{position: 'relative', left: '10%'}}>
                 <h2>Tile {item.i}</h2>
-                <GraphTile />
               </div>
             </div>
           ))}

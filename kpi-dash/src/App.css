@@ -30,6 +30,11 @@
   top: 5px;
   right: 5px;
   cursor: pointer;
+  z-index: 1; /* Ensure the "X" button appears above other content */
+}
+
+.remove:hover {
+  color: red; /* Change color on hover for visual feedback */
 }
 
 .tile-content {

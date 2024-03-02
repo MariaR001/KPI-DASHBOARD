@@ -3,9 +3,6 @@ import BarGraphComponent from './BarGraphComponent';
 import ListComponent from './ListComponent';
 import NumberComponent from './NumberComponent';
 
-// i need this component to  give the user options on how to display their data
-// i.e. bar graph, list, number, etc
-
 const GraphTile: React.FC = () => {
   const [displayType, setDisplayType] = useState('barGraph');
   const [data, setData] = useState([1, 2, 3, 4, 5]);
