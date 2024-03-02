@@ -6,10 +6,12 @@ import { Tile } from "../backend/Types";
 import YAML from "yaml";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
+import "./App.css";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const MyGrid: React.FC = () => {
+  const [isDraggable, setIsDraggable] = useState(true);
   const [config, setConfig] = useState<Config | null>(null);
   const [layout, setLayout] = useState<Tile[]>([]);
 
@@ -67,7 +69,29 @@ const MyGrid: React.FC = () => {
   };
 
   const removeItem = (i: string) => {
-    setLayout(layout.filter((item) => item.i !== i));
+    const newLayout = layout.filter((item) => item.i !== i);
+    setLayout(newLayout); // Remove the item from the layout
+  };
+
+  const addItem = () => {
+    const newItem = {
+      i: (layout.length + 1).toString(),
+      x: layout.length % 6, // Add horizontally first
+      y: Math.floor(layout.length / 3), // Then vertically
+      w: 1,
+      h: 2,
+      representation: "",
+      dataset: "",
+    };
+    setLayout([...layout, newItem]);
+  };
+
+  const handleMouseDown = () => {
+    setIsDraggable(false);
+  };
+
+  const handleMouseUp = () => {
+    setIsDraggable(true);
   };
 
   if (!config) {
@@ -75,37 +99,46 @@ const MyGrid: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="dashboard">
+      <div className="grid-controls">
+        <button onClick={addItem} className="add-tile-button">
+          Add Tile
+        </button>
+      </div>
       <ResponsiveGridLayout
         className="layout"
         layouts={{ lg: layout }}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-        cols={{ lg: 3, md: 3, sm: 2, xs: 1, xxs: 1 }}
-        rowHeight={100}
+        cols={{ lg: 6, md: 6, sm: 3, xs: 2, xxs: 1 }}
+        rowHeight={180}
         onLayoutChange={onLayoutChange}
+        isDraggable={isDraggable}
       >
-        {layout?.map((item, index) => {
-          return (
+        {layout?.map((item, index) => (
+          <div
+            key={index}
+            style={{ border: "1px solid #ccc", position: "relative" }}
+          >
+            <span className="text">{item.i}</span>
             <div
-              key={index}
-              style={{ border: "1px solid #ccc", position: "relative" }}
+              className="remove"
+              onMouseDown={handleMouseDown}
+              onMouseUp={handleMouseUp}
+              onClick={(e) => {
+                e.stopPropagation();
+                removeItem(item.i);
+              }}
+              style={{
+                position: "absolute",
+                top: "5px",
+                right: "5px",
+                cursor: "pointer",
+              }}
             >
-              <span className="text">{item.i}</span>
-              <div
-                className="remove"
-                onClick={() => removeItem(item.i)}
-                style={{
-                  position: "absolute",
-                  top: "5px",
-                  right: "5px",
-                  cursor: "pointer",
-                }}
-              >
-                X
-              </div>
+              X
             </div>
-          );
-        })}
+          </div>
+        ))}
       </ResponsiveGridLayout>
     </div>
   );
