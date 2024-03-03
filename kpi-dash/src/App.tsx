@@ -3,6 +3,7 @@ import { Responsive, WidthProvider } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import "./App.css";
+import DisplayData from "./components/DisplayData";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -73,9 +74,8 @@ const MyGrid: React.FC = () => {
             </div>
             <div
               className="tile-content"
-              style={{ position: "relative", left: "10%" }}
             >
-              <h2>Tile {item.i}</h2>
+              <h2>Tile {item.i} <div style={{ position: "relative", justifyContent:"center", alignItems: "center", display:"flex" }}><DisplayData /></div></h2>    
             </div>
           </div>
         ))}
