@@ -7,7 +7,7 @@ import LineGraphComponent from './LineGraphComponent';
 import GraphComponent from './BarGraphComponent';
 
 const DisplayData: React.FC = () => {
-  const [displayType, setDisplayType] = useState('barGraph');
+  const [displayType, setDisplayType] = useState('');
 
   const barGraphData = {
     title: 'Sample Bar Graph',
@@ -88,6 +88,7 @@ const DisplayData: React.FC = () => {
     <div>
       <div  style={{ position: "relative", justifyContent:"center", alignItems: "center", display:"flex" }}>
         <select value={displayType} onChange={handleDisplayTypeChange}>
+          <option value="">Select Display Type</option>
           <option value="barGraph">Bar Graph</option>
           <option value="lineGraph">Line Graph</option>
           <option value="gauge">Gauge</option>
