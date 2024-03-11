@@ -1,5 +1,4 @@
 import React from 'react';
-// @ts-ignore
 import { useTable } from 'react-table';
 
 interface TableColumn {

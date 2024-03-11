@@ -1,5 +1,4 @@
 import React from 'react';
-// @ts-ignore
 import GaugeChart from 'react-gauge-chart';
 
 interface GaugeData {
