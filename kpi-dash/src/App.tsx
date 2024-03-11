@@ -14,6 +14,11 @@ const MyGrid: React.FC = () => {
   const [isDraggable, setIsDraggable] = useState(true);
   const [config, setConfig] = useState<Config | null>(null);
   const [layout, setLayout] = useState<Tile[]>([]);
+  const [counter, setCounter] = useState(layout.length);
+
+  useEffect(() => {
+    console.log(counter);
+  });
 
   const onLayoutChange = (newLayout: any) => {
     if (!newLayout) {
@@ -69,21 +74,21 @@ const MyGrid: React.FC = () => {
   };
 
   const removeItem = (i: string) => {
-    const newLayout = layout.filter((item) => item.i !== i);
-    setLayout(newLayout); // Remove the item from the layout
+    setLayout(layout.filter((item) => item.i !== i));
   };
 
   const addItem = () => {
     const newItem = {
-      i: (layout.length + 1).toString(),
-      x: layout.length % 6, // Add horizontally first
-      y: Math.floor(layout.length / 3), // Then vertically
-      w: 1,
+      i: counter.toString(),
+      x: (layout.length * 2) % 12, // Add horizontally first
+      y: Infinity, // Then vertically
+      w: 2,
       h: 2,
       representation: "",
       dataset: "",
     };
-    setLayout([...layout, newItem]);
+    setLayout(layout.concat(newItem));
+    setCounter(counter + 1);
   };
 
   const handleMouseDown = () => {
@@ -127,12 +132,6 @@ const MyGrid: React.FC = () => {
               onClick={(e) => {
                 e.stopPropagation();
                 removeItem(item.i);
-              }}
-              style={{
-                position: "absolute",
-                top: "5px",
-                right: "5px",
-                cursor: "pointer",
               }}
             >
               X
