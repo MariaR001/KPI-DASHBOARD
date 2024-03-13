@@ -16,33 +16,25 @@ const MyGrid: React.FC = () => {
   const [layout, setLayout] = useState<Tile[]>([]);
   const [counter, setCounter] = useState(layout.length);
 
-  useEffect(() => {
-    console.log(counter);
-  });
-
-  const onLayoutChange = (newLayout: any) => {
+  const onLayoutChange = async (newLayout: any) => {
     if (!newLayout) {
       return;
     }
 
     const newConfig: Config = {
-      tiles:
-        newLayout?.map((item: any) => {
-          return {
-            i: item.i,
-            x: item.x,
-            y: item.y,
-            w: item.w,
-            h: item.h,
-            representation: "",
-            dataset: "",
-          };
-        }) || [],
+      tiles: newLayout.map((item: any, index: number) => ({
+        i: layout[index].i,
+        x: item.x,
+        y: item.y,
+        w: item.w,
+        h: item.h,
+        representation: layout[index].representation,
+        dataset: layout[index].dataset,
+      })),
     };
 
-    setConfig(newConfig);
-    storeConfig(newConfig);
-    loadConfig();
+    await setConfig(newConfig);
+    await storeConfig(newConfig);
   };
 
   const loadConfig = async () => {
@@ -74,21 +66,31 @@ const MyGrid: React.FC = () => {
   };
 
   const removeItem = (i: string) => {
-    setLayout(layout.filter((item) => item.i !== i));
+    setLayout((prevLayout) => prevLayout.filter((item) => item.i !== i));
   };
 
   const addItem = () => {
+    let newCounter = counter;
+    const isIndexInUse = (item: any) => item.i === newCounter;
+
+    while (layout.some(isIndexInUse)) {
+      newCounter++;
+    }
+
     const newItem = {
-      i: counter.toString(),
-      x: (layout.length * 2) % 12, // Add horizontally first
-      y: Infinity, // Then vertically
+      i: newCounter as unknown as string,
+      x: (layout.length * 2) % 12,
+      y: Infinity,
       w: 2,
       h: 2,
       representation: "",
       dataset: "",
-    };
-    setLayout(layout.concat(newItem));
+    } as Tile;
+
+    const newLayout = [...layout, newItem];
+
     setCounter(counter + 1);
+    setLayout(newLayout);
   };
 
   const handleMouseDown = () => {
@@ -118,6 +120,7 @@ const MyGrid: React.FC = () => {
         rowHeight={180}
         onLayoutChange={onLayoutChange}
         isDraggable={isDraggable}
+        compactType={null}
       >
         {layout?.map((item, index) => (
           <div
