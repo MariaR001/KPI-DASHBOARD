@@ -139,6 +139,11 @@ const MyGrid: React.FC = () => {
             >
               X
             </div>
+            <div
+              className="tile-content"
+            >
+              <h2>Tile {item.i} <div style={{ position: "relative", justifyContent:"center", alignItems: "center", display:"flex" }}><DisplayData /></div></h2>    
+            </div>
           </div>
         ))}
       </ResponsiveGridLayout>
