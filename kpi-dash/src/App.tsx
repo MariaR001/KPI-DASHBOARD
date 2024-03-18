@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { Config } from "../backend/Types";
 import { Tile } from "../backend/Types";
-
 import YAML from "yaml";
+
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import "./App.css";
@@ -123,11 +123,13 @@ const MyGrid: React.FC = () => {
         compactType={null}
       >
         {layout?.map((item, index) => (
-          <div
-            key={index}
-            style={{ border: "1px solid #ccc", position: "relative" }}
-          >
-            <span className="text">{item.i}</span>
+          <div key={index} className="grid-item">
+            <div
+              className="tile-content"
+              style={{ position: "relative", left: "10%" }}
+            >
+              <span className="text">{item.i}</span>
+            </div>
             <div
               className="remove"
               onMouseDown={handleMouseDown}
