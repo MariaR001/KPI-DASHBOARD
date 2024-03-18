@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { Config } from "../backend/Types";
 import { Tile } from "../backend/Types";
@@ -124,10 +124,7 @@ const MyGrid: React.FC = () => {
       >
         {layout?.map((item, index) => (
           <div key={index} className="grid-item">
-            <div
-              className="tile-content"
-              style={{ position: "relative", left: "10%" }}
-            >
+            <div className="tile-content" style={{ position: "relative" }}>
               <span className="text">{item.i}</span>
             </div>
             <div
