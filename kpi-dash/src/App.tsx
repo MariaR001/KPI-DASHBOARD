@@ -11,7 +11,13 @@ import DisplayData from "./components/DisplayData";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-const MyGrid: React.FC = () => {
+type MyGridProps = {
+  initialConfig: Config;
+  onConfigChange: (config: Config) => void;
+  data: any;
+};
+
+const MyGrid: React.FC<MyGridProps> = ({ initialConfig, onConfigChange, data }) => {
   const [isDraggable, setIsDraggable] = useState(true);
   const [config, setConfig] = useState<Config | null>(null);
   const [layout, setLayout] = useState<Tile[]>([]);

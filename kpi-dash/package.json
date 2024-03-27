@@ -1,7 +1,6 @@
 {
-  "name": "kpi-dash",
-  "version": "0.1.0",
-  "private": true,
+  "name": "kpi-dash-test",
+  "version": "0.1.2",
   "type": "module",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
@@ -15,6 +14,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-gauge-chart": "^0.4.1",
+    "react-grid-layout": "github:react-grid-layout/react-grid-layout",
     "react-scripts": "5.0.1",
     "react-table": "^7.8.0",
     "recharts": "^2.12.3",
@@ -26,7 +26,7 @@
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "npx tsx backend/server.ts",
     "client": "set PORT=3003 && react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && node build.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
