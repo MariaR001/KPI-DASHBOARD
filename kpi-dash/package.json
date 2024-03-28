@@ -2,6 +2,14 @@
   "name": "kpi-dash-test",
   "version": "0.1.2",
   "type": "module",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-grid-layout": "github:react-grid-layout/react-grid-layout",
+    "react-gauge-chart": "^0.4.1",
+    "react-table": "^7.8.0",
+    "recharts": "^2.12.3"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -11,13 +19,7 @@
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
     "cors": "^2.8.5",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-gauge-chart": "^0.4.1",
-    "react-grid-layout": "github:react-grid-layout/react-grid-layout",
     "react-scripts": "5.0.1",
-    "react-table": "^7.8.0",
-    "recharts": "^2.12.3",
     "ts-node": "^10.9.2",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
