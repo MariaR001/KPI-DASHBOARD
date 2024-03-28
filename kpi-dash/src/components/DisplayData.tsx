@@ -5,80 +5,16 @@ import ListComponent from './ListComponent';
 import NumberComponent from './NumberComponent';
 import LineGraphComponent from './LineGraphComponent';
 import GraphComponent from './BarGraphComponent';
+import { Tile } from '../../backend/Types';
 
-const DisplayData: React.FC = () => {
+interface DisplayDataProps {
+  tile: Tile;
+  data: any;
+}
+
+const DisplayData: React.FC<DisplayDataProps> = ({ tile, data }) => {
   const [displayType, setDisplayType] = useState('');
 
-  const barGraphData = {
-    title: 'Sample Bar Graph',
-    xAxisTitle: 'Months',
-    yAxisTitle: 'Sales',
-    data: [
-      { name: 'Jan', value: 100 },
-      { name: 'Feb', value: 150 },
-      { name: 'Mar', value: 200 },
-      { name: 'Apr', value: 250 },
-      { name: 'May', value: 300 },
-      { name: 'Jun', value: 350 },
-      { name: 'Jul', value: 400 },
-      { name: 'Aug', value: 450 },
-      { name: 'Sep', value: 500 },
-      { name: 'Oct', value: 550 },
-      { name: 'Nov', value: 600 },
-      { name: 'Dec', value: 650 },
-    ],
-  };
-
-  const lineGraphData = {
-    title: 'Sample Line Graph',
-    data: [
-      { name: 'Jan', value: 100 },
-      { name: 'Feb', value: 150 },
-      { name: 'Mar', value: 200 },
-      { name: 'Apr', value: 250 },
-      { name: 'May', value: 300 },
-      { name: 'Jun', value: 350 },
-      { name: 'Jul', value: 400 },
-      { name: 'Aug', value: 450 },
-      { name: 'Sep', value: 500 },
-      { name: 'Oct', value: 550 },
-      { name: 'Nov', value: 600 },
-      { name: 'Dec', value: 650 },
-    ],
-    lineKey: 'value',
-    xAxisTitle: 'Months',
-    yAxisTitle: 'Sales',
-  };
-
-  const numberTextEmojiData = 
-    { value: 95, // Value between 0 and 100
-     title: 'Sample Number Display' };
-  
-  const gaugeComponentValue = 
-    { value: 0.75 , // Value between 0 and 1
-     title: 'Sample Gauge Display' }
-  ;
-
-  const listComponentData = {
-    items: [
-      { label: 'Item 1', value: 10 },
-      { label: 'Item 2', value: 20 },
-      { label: 'Item 3', value: 30 },
-    ],
-  };
-
-  const tableComponentData = {
-    title: 'Sample Table',
-    columns: [
-      { label: 'Name', key: 'name' },
-      { label: 'Age', key: 'age' },
-    ],
-    rows: [
-      { name: 'John', age: 30 },
-      { name: 'Jane', age: 25 },
-      { name: 'Doe', age: 40 },
-    ],
-  };
 
   const handleDisplayTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setDisplayType(event.target.value);
@@ -98,12 +34,12 @@ const DisplayData: React.FC = () => {
         </select>
       </div>
       <div>
-        {displayType === 'barGraph' && <GraphComponent data={barGraphData} />}
-        {displayType === 'lineGraph' && <LineGraphComponent data={lineGraphData} />}
-        {displayType === 'gauge' && <GaugeComponent data={gaugeComponentValue} />}
-        {displayType === 'table' && <TableComponent data={tableComponentData} />}
-        {displayType === 'list' && <ListComponent data ={listComponentData} />}
-        {displayType === 'number' && <NumberComponent data = {numberTextEmojiData} />}
+        {displayType === 'barGraph' && <GraphComponent data={data.barGraphData} width={tile.w*200} height={tile.h*300} />}
+        {displayType === 'lineGraph' && <LineGraphComponent data={data.linegraphData} width={tile.w*200} height={tile.h*300}/>}
+        {displayType === 'gauge' && <GaugeComponent data={data.gaugeComponentValue} width={tile.w*100} height={tile.h*100}/>}
+        {displayType === 'table' && <TableComponent data={data.tableComponentData} width={tile.w*100} height={tile.h*100} />}
+        {displayType === 'list' && <ListComponent data ={data.listComponentData} width={tile.w*100} height={tile.h*100}/>}
+        {displayType === 'number' && <NumberComponent data = {data.numberTextEmojiData} width={tile.w*100} height={tile.h*100}/>}
       </div>
     </div>
   );

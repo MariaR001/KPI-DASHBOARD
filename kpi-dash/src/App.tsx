@@ -106,6 +106,71 @@ const MyGrid: React.FC = () => {
     loadConfig();
   }
 
+ 
+
+  const data = {
+    numberTextEmojiData: { value: 95, title: "Sample Number Display" },
+    gaugeComponentValue: { value: 0.75, title: "Sample Gauge Display" },
+    listComponentData: {
+      items: [
+        { label: "Item 1", value: 10 },
+        { label: "Item 2", value: 20 },
+        { label: "Item 3", value: 30 },
+      ],
+    },
+    tableComponentData: {
+      title: "Sample Table",
+      columns: [
+        { label: "Name", key: "name" },
+        { label: "Age", key: "age" },
+      ],
+      rows: [
+        { name: "John", age: 30 },
+        { name: "Jane", age: 25 },
+        { name: "Doe", age: 40 },
+      ],
+    },
+    barGraphData: {
+      title: "Sample Bar Graph",
+      xAxisTitle: "Months",
+      yAxisTitle: "Sales",
+      data: [
+        { name: "Jan", value: 100 },
+        { name: "Feb", value: 150 },
+        { name: "Mar", value: 200 },
+        { name: "Apr", value: 250 },
+        { name: "May", value: 300 },
+        { name: "Jun", value: 350 },
+        { name: "Jul", value: 400 },
+        { name: "Aug", value: 450 },
+        { name: "Sep", value: 500 },
+        { name: "Oct", value: 550 },
+        { name: "Nov", value: 600 },
+        { name: "Dec", value: 650 },
+      ],
+    },
+    linegraphData: {
+      title: "Sample Line Graph",
+      data: [
+        { name: "Jan", value: 100 },
+        { name: "Feb", value: 150 },
+        { name: "Mar", value: 200 },
+        { name: "Apr", value: 250 },
+        { name: "May", value: 300 },
+        { name: "Jun", value: 350 },
+        { name: "Jul", value: 400 },
+        { name: "Aug", value: 450 },
+        { name: "Sep", value: 500 },
+        { name: "Oct", value: 550 },
+        { name: "Nov", value: 600 },
+        { name: "Dec", value: 650 },
+      ],
+      lineKey: "value",
+      xAxisTitle: "Months",
+      yAxisTitle: "Sales",
+    },
+  };
+
   return (
     <div className="dashboard">
       <div className="grid-controls">
@@ -138,10 +203,12 @@ const MyGrid: React.FC = () => {
             >
               X
             </div>
-            <div
-              className="tile-content" >
+            <div className="tile-content">
               <h2>
-                Tile {item.i} <div style={{ position: "relative", justifyContent:"center", alignItems: "center", display:"flex" }}><DisplayData /></div>
+                Tile {item.i} 
+                <div style={{ position: "relative", justifyContent:"center", alignItems: "center", display:"flex" }}>
+                  <DisplayData tile={item} data={data} />
+                </div>
               </h2>    
             </div>
           </div>
