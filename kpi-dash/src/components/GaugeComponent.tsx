@@ -6,11 +6,17 @@ interface GaugeData {
   title: string;
 }
 
-const GaugeComponent: React.FC<{ data: GaugeData }> = ({ data }) => {
+interface GaugeComponentProps {
+  data: GaugeData;
+  height: number;
+  width: number;
+}
+
+const GaugeComponent: React.FC<GaugeComponentProps> = ({ data, height, width }) => {
   return (
-    <div>
+    <div  style={{ width: '100%', textAlign: 'center', justifyContent: 'center',  overflowX: 'auto', overflowY: 'auto' }}>
       <h2>{data.title}</h2>
-      <div style={{ width: '200px' }}>
+      <div style={{ display: 'inline-block', width: width, height: height, }}>
         <GaugeChart
           id="gauge-chart1"
           nrOfLevels={20}

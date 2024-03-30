@@ -9,7 +9,13 @@ interface ListData {
   items: ListItem[];
 }
 
-const ListComponent: React.FC<{ data: ListData }> = ({ data }) => {
+interface ListComponentProps {
+  data: ListData;
+  height: number;
+  width: number;
+}
+
+const ListComponent: React.FC<ListComponentProps> = ({ data, width, height }) => {
   return (
     <div>
       <h2>List</h2>

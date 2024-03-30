@@ -8,16 +8,20 @@ interface GraphData {
   data: { name: string; value: number }[];
 }
 
-const GraphComponent: React.FC<{ data: GraphData }> = ({ data }) => {
+interface GraphComponentProps {
+  data: GraphData;
+  width: number;
+  height: number;
+}
+
+const GraphComponent: React.FC<GraphComponentProps> = ({ data, width, height }) => {
   return (
-    <div>
+    <div style={{ width: '100%', textAlign: 'center', justifyContent: 'center' }}>
       <h3>{data.title}</h3>
-      <p>X-Axis Title: {data.xAxisTitle}</p>
-      <p>Y-Axis Title: {data.yAxisTitle}</p>
-      <div style={{ position: "relative", justifyContent:"center", alignItems: "center", display:"flex" }}>
+      <div style={{ display: 'inline-block', width: width, height: height }}>
         <BarChart
-          width={600}
-          height={300}
+          width= {width}
+          height={height}
           data={data.data}
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
         >
@@ -29,6 +33,8 @@ const GraphComponent: React.FC<{ data: GraphData }> = ({ data }) => {
           <Bar dataKey="value" fill="#8884d8" />
         </BarChart>
       </div>
+      <p>X-Axis Title: {data.xAxisTitle}</p>
+      <p>Y-Axis Title: {data.yAxisTitle}</p>
     </div>
   );
 };

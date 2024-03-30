@@ -12,7 +12,13 @@ interface TableData {
   rows: Record<string, any>[];
 }
 
-const TableComponent: React.FC<{ data: TableData }> = ({ data }) => {
+interface TableComponentProps {
+  data: TableData;
+  height: number;
+  width: number;
+}
+
+const TableComponent: React.FC<TableComponentProps> = ({ data , height, width}) => {
   const columns = React.useMemo(
     () => data.columns.map(column => ({ Header: column.label, accessor: column.key })),
     [data.columns]
@@ -32,7 +38,7 @@ const TableComponent: React.FC<{ data: TableData }> = ({ data }) => {
   } = useTable({ columns, data: tableData });
 
   return (
-    <div style={{ textAlign: 'center' }}>
+    <div style={{ width, height, textAlign: 'center', justifyContent: 'center' }}>
       <h2>{data.title}</h2>
       <table {...getTableProps()} style={{ margin: '0 auto', border: 'solid 1px blue', width: '100%', maxWidth: '800px' }}>
         <thead>

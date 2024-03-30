@@ -5,7 +5,13 @@ interface NumberData {
   title: string;
 }
 
-const NumberComponent: React.FC<{ data: NumberData }> = ({ data }) => {
+interface NumberComponentProps {
+  data: NumberData;
+  height: number;
+  width: number;
+}
+
+const NumberComponent: React.FC<NumberComponentProps> = ({ data, height, width }) => {
   // Determine emoji based on the value
   let emoji;
   let color;
@@ -22,7 +28,7 @@ const NumberComponent: React.FC<{ data: NumberData }> = ({ data }) => {
   }
 
   return (
-    <div>
+    <div style={{ textAlign: 'center', justifyContent: 'center', width, height }}>
       <h3 style={{ fontSize: '2rem'}}>{data.title}</h3>
       <p style={{ fontSize: '2rem', color }}>Number: {data.value}{emoji}</p>
     </div>

@@ -9,14 +9,20 @@ interface LineGraphData {
   yAxisTitle?: string;
 }
 
-const LineGraphComponent: React.FC<{ data: LineGraphData }> = ({ data }) => {
+interface GraphComponentProps {
+  data: LineGraphData;
+  height: number;
+  width: number;
+}
+
+const LineGraphComponent: React.FC<GraphComponentProps> = ({ data, width, height }) => {
   const { title, data: chartData, lineKey, xAxisTitle = 'X Axis', yAxisTitle = 'Y Axis' } = data;
 
   return (
-    <div>
+    <div style={{ width: '100%', textAlign: 'center', justifyContent: 'center' }}>
       <h2>{title}</h2>
-      <div style={{ position: "relative", justifyContent:"center", alignItems: "center", display:"flex" }}>
-      <LineChart width={650} height={300} data={chartData}>
+      <div style={{ display: 'inline-block', }}>
+      <LineChart width={width} height={height} data={chartData}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" label={{ value: xAxisTitle, position: 'insideBottom', offset: -10 }} />
         <YAxis label={{ value: yAxisTitle, angle: -90, position: 'insideLeft', offset: 0 }} />

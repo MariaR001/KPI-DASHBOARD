@@ -117,19 +117,47 @@ const DisplayData: React.FC<DisplayDataProps> = ({
         </select>
       </div>
       <div>
-        {displayType === "barGraph" && <GraphComponent data={barGraphData} />}
+        {displayType === "barGraph" && (
+          <GraphComponent
+            data={data.barGraphData}
+            width={tile.w * 200}
+            height={tile.h * 300}
+          />
+        )}
         {displayType === "lineGraph" && (
-          <LineGraphComponent data={lineGraphData} />
+          <LineGraphComponent
+            data={data.linegraphData}
+            width={tile.w * 200}
+            height={tile.h * 300}
+          />
         )}
         {displayType === "gauge" && (
-          <GaugeComponent data={gaugeComponentValue} />
+          <GaugeComponent
+            data={data.gaugeComponentValue}
+            width={tile.w * 100}
+            height={tile.h * 100}
+          />
         )}
         {displayType === "table" && (
-          <TableComponent data={tableComponentData} />
+          <TableComponent
+            data={data.tableComponentData}
+            width={tile.w * 100}
+            height={tile.h * 100}
+          />
         )}
-        {displayType === "list" && <ListComponent data={listComponentData} />}
+        {displayType === "list" && (
+          <ListComponent
+            data={data.listComponentData}
+            width={tile.w * 100}
+            height={tile.h * 100}
+          />
+        )}
         {displayType === "number" && (
-          <NumberComponent data={numberTextEmojiData} />
+          <NumberComponent
+            data={data.numberTextEmojiData}
+            width={tile.w * 100}
+            height={tile.h * 100}
+          />
         )}
       </div>
     </div>
