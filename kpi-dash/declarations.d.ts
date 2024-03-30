@@ -1,4 +1,4 @@
-declare module 'kpi-dash-test2' {
+declare module 'react-kpi-dashboard' {
   import React from 'react';
 
   const MyGrid: React.FC<{}>;
