@@ -300,6 +300,7 @@ const MyGrid: React.FC = () => {
                   <DisplayData
                     tile={item}
                     updateTileRepresentation={updateTileRepresentation}
+                    data={data}
                   />
                 </div>
               </h2>

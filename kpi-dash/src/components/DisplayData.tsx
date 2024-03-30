@@ -10,84 +10,15 @@ import { Tile } from "../../backend/Types";
 interface DisplayDataProps {
   tile: Tile;
   updateTileRepresentation: (tileId: string, newRepresentation: string) => void;
+  data: any;
 }
 
 const DisplayData: React.FC<DisplayDataProps> = ({
   tile,
   updateTileRepresentation,
+  data,
 }) => {
   const [displayType, setDisplayType] = useState(tile.representation);
-
-  const barGraphData = {
-    title: "Sample Bar Graph",
-    xAxisTitle: "Months",
-    yAxisTitle: "Sales",
-    data: [
-      { name: "Jan", value: 100 },
-      { name: "Feb", value: 150 },
-      { name: "Mar", value: 200 },
-      { name: "Apr", value: 250 },
-      { name: "May", value: 300 },
-      { name: "Jun", value: 350 },
-      { name: "Jul", value: 400 },
-      { name: "Aug", value: 450 },
-      { name: "Sep", value: 500 },
-      { name: "Oct", value: 550 },
-      { name: "Nov", value: 600 },
-      { name: "Dec", value: 650 },
-    ],
-  };
-
-  const lineGraphData = {
-    title: "Sample Line Graph",
-    data: [
-      { name: "Jan", value: 100 },
-      { name: "Feb", value: 150 },
-      { name: "Mar", value: 200 },
-      { name: "Apr", value: 250 },
-      { name: "May", value: 300 },
-      { name: "Jun", value: 350 },
-      { name: "Jul", value: 400 },
-      { name: "Aug", value: 450 },
-      { name: "Sep", value: 500 },
-      { name: "Oct", value: 550 },
-      { name: "Nov", value: 600 },
-      { name: "Dec", value: 650 },
-    ],
-    lineKey: "value",
-    xAxisTitle: "Months",
-    yAxisTitle: "Sales",
-  };
-
-  const numberTextEmojiData = {
-    value: 95, // Value between 0 and 100
-    title: "Sample Number Display",
-  };
-
-  const gaugeComponentValue = {
-    value: 0.75, // Value between 0 and 1
-    title: "Sample Gauge Display",
-  };
-  const listComponentData = {
-    items: [
-      { label: "Item 1", value: 10 },
-      { label: "Item 2", value: 20 },
-      { label: "Item 3", value: 30 },
-    ],
-  };
-
-  const tableComponentData = {
-    title: "Sample Table",
-    columns: [
-      { label: "Name", key: "name" },
-      { label: "Age", key: "age" },
-    ],
-    rows: [
-      { name: "John", age: 30 },
-      { name: "Jane", age: 25 },
-      { name: "Doe", age: 40 },
-    ],
-  };
 
   const handleDisplayTypeChange = (
     event: React.ChangeEvent<HTMLSelectElement>
