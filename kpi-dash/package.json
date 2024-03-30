@@ -1,7 +1,9 @@
 {
   "name": "react-kpi-dashboard",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "type": "module",
+  "types": "declarations.d.ts",
+  "module": "src/index.tsx",
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
