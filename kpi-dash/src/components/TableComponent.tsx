@@ -1,5 +1,6 @@
 import React from "react";
-import { useTable } from "react-table";
+import * as ReactTable from "react-table";
+
 import { useRef, useState, useEffect } from "react";
 
 interface TableColumn {
@@ -33,7 +34,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ data }) => {
   const tableData = React.useMemo(() => data.rows, [data.rows]);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data: tableData });
+    ReactTable.useTable({ columns, data: tableData });
 
   useEffect(() => {
     console.log("COMPONENT CHANGING");
