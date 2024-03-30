@@ -2,6 +2,9 @@ import express from "express";
 import YAML from "js-yaml";
 import cors from "cors";
 import * as fs from "fs";
+import multer from "multer";
+import path from "path";
+import mkdirp from "mkdirp";
 
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -14,6 +17,15 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+const upload = multer({ dest: "uploads/" });
+
+declare global {
+  namespace Express {
+    interface Request {
+      file: any;
+    }
+  }
+}
 // GET /config
 app.get("/config", (req, res) => {
   try {
@@ -37,6 +49,50 @@ app.post("/config", (req, res) => {
     console.error("Error storing config", error);
     res.status(500).json({ error: "Error storing config" });
   }
+});
+
+// POST /upload
+app.post(
+  "/upload",
+  upload.single("file"),
+  async (req: express.Request, res) => {
+    try {
+      const file = req.file;
+      const tileId = req.body.tileId;
+      const data = JSON.parse(fs.readFileSync(file.path, "utf8"));
+
+      // Create a directory for the tile if it doesn't exist
+      const tileDirectory = path.join(__dirname, "uploads", tileId);
+      await mkdirp(tileDirectory);
+
+      // Move the file to the tile's directory
+      const newFilePath = path.join(tileDirectory, file.originalname);
+      fs.renameSync(file.path, newFilePath);
+
+      res.json({
+        message: "File uploaded successfully",
+        file: newFilePath,
+        data,
+      });
+    } catch (error) {
+      console.error("Error uploading file", error);
+      res.status(500).json({ error: "Error uploading file" });
+    }
+  }
+);
+
+// GET /file/:filePath
+app.get("/file/:filePath", (req, res) => {
+  const filePath = path.join(__dirname, "uploads", req.params.filePath);
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      console.error("Error reading file", err);
+      res.status(500).json({ error: "Error reading file" });
+      return;
+    }
+
+    res.json(JSON.parse(data));
+  });
 });
 
 app.listen(3002, () => {

@@ -11,15 +11,16 @@ import { useEffect } from "react";
 interface DisplayDataProps {
   tile: Tile;
   updateTileRepresentation: (tileId: string, newRepresentation: string) => void;
-  data: any;
+  updateTileDataset: (tileId: string, newDataset: string) => void;
 }
 
 const DisplayData: React.FC<DisplayDataProps> = ({
   tile,
   updateTileRepresentation,
-  data,
+  updateTileDataset,
 }) => {
   const [displayType, setDisplayType] = useState(tile.representation);
+  const [fileData, setFileData] = useState(null);
 
   useEffect(() => {
     setDisplayType(tile.representation);
@@ -30,6 +31,26 @@ const DisplayData: React.FC<DisplayDataProps> = ({
   ) => {
     setDisplayType(event.target.value);
     updateTileRepresentation(tile.i, event.target.value);
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("tileId", tile.i);
+
+      fetch("http://localhost:3002/upload", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setFileData(data.data);
+          updateTileDataset(tile.i, data.file);
+        })
+        .catch((error) => console.error("Error uploading file", error));
+    }
   };
 
   return (
@@ -51,46 +72,47 @@ const DisplayData: React.FC<DisplayDataProps> = ({
           <option value="list">List</option>
           <option value="number">Number</option>
         </select>
+        <input type="file" onChange={handleFileChange} />
       </div>
       <div>
-        {displayType === "barGraph" && (
+        {displayType === "barGraph" && fileData && (
           <GraphComponent
-            data={data.barGraphData}
+            data={fileData}
             width={tile.w * 200}
             height={tile.h * 300}
           />
         )}
-        {displayType === "lineGraph" && (
+        {displayType === "lineGraph" && fileData && (
           <LineGraphComponent
-            data={data.linegraphData}
+            data={fileData}
             width={tile.w * 200}
             height={tile.h * 300}
           />
         )}
-        {displayType === "gauge" && (
+        {displayType === "gauge" && fileData && (
           <GaugeComponent
-            data={data.gaugeComponentValue}
+            data={fileData}
             width={tile.w * 100}
             height={tile.h * 100}
           />
         )}
-        {displayType === "table" && (
+        {displayType === "table" && fileData && (
           <TableComponent
-            data={data.tableComponentData}
+            data={fileData}
             width={tile.w * 100}
             height={tile.h * 100}
           />
         )}
-        {displayType === "list" && (
+        {displayType === "list" && fileData && (
           <ListComponent
-            data={data.listComponentData}
+            data={fileData}
             width={tile.w * 100}
             height={tile.h * 100}
           />
         )}
-        {displayType === "number" && (
+        {displayType === "number" && fileData && (
           <NumberComponent
-            data={data.numberTextEmojiData}
+            data={fileData}
             width={tile.w * 100}
             height={tile.h * 100}
           />

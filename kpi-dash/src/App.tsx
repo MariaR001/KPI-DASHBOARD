@@ -41,11 +41,20 @@ const MyGrid: React.FC = () => {
 
       const parsedConfig: Config = YAML.parse(configString);
 
-      // Map the ids to the tiles
-      const tilesWithIds = parsedConfig.tiles.map((tile) => ({
-        ...tile,
-        id: tile.id,
-      }));
+      const tilesWithIds = await Promise.all(
+        parsedConfig.tiles.map(async (tile) => {
+          const fileResponse = await fetch(
+            `http://localhost:3002/file/${tile.dataset}`
+          );
+          const fileData = await fileResponse.json();
+
+          return {
+            ...tile,
+            id: tile.id,
+            dataset: fileData,
+          };
+        })
+      );
 
       setConfig(parsedConfig);
 
@@ -53,7 +62,7 @@ const MyGrid: React.FC = () => {
         tilesWithIds.map((tile) => ({
           id: tile.id,
           representation: tile.representation,
-          dataset: "", // Set this to the initial dataset value
+          dataset: tile.dataset,
         }))
       );
 
@@ -158,6 +167,22 @@ const MyGrid: React.FC = () => {
     setLayout((prevLayout) =>
       prevLayout.map((tile, i) =>
         i === index ? { ...tile, representation: newRepresentation } : tile
+      )
+    );
+  };
+
+  const updateTileDataset = (tileIndex: string, newDataset: string) => {
+    const index = parseInt(tileIndex, 10);
+
+    setIds((prevIds) =>
+      prevIds.map((item, i) =>
+        i === index ? { ...item, dataset: newDataset } : item
+      )
+    );
+
+    setLayout((prevLayout) =>
+      prevLayout.map((tile, i) =>
+        i === index ? { ...tile, dataset: newDataset } : tile
       )
     );
   };
@@ -302,7 +327,7 @@ const MyGrid: React.FC = () => {
                   <DisplayData
                     tile={item}
                     updateTileRepresentation={updateTileRepresentation}
-                    data={data}
+                    updateTileDataset={updateTileDataset}
                   />
                 </div>
               </h2>
