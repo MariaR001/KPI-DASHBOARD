@@ -89,13 +89,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({
         />
       </div>
       <div style={{ height: "100%", width: "100%" }}>
-        {displayType === "barGraph" && data && (
-          <GraphComponent
-            data={data}
-            width={tile.w * 200}
-            height={tile.h * 300}
-          />
-        )}
+        {displayType === "barGraph" && data && <GraphComponent data={data} />}
         {displayType === "lineGraph" && data && (
           <LineGraphComponent data={data} />
         )}
