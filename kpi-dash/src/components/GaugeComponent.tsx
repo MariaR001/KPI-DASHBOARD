@@ -1,6 +1,8 @@
 import React from "react";
-import GaugeChart from "react-gauge-chart";
 import { useRef, useState, useEffect } from "react";
+import * as GaugeChartModule from "react-gauge-chart";
+
+const GaugeChart = GaugeChartModule.default;
 
 interface GaugeData {
   value: number;
