@@ -66,15 +66,13 @@ const DisplayData: React.FC<DisplayDataProps> = ({
   };
 
   return (
-    <div>
-      <div
-        style={{
-          position: "relative",
-          justifyContent: "center",
-          alignItems: "center",
-          display: "flex",
-        }}
-      >
+    <div
+      style={{
+        height: "100%",
+        width: "100%",
+      }}
+    >
+      <div>
         <select value={displayType} onChange={handleDisplayTypeChange}>
           <option value="">Select Display Type</option>
           <option value="barGraph">Bar Graph</option>
@@ -90,7 +88,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({
           style={{ color: "transparent" }}
         />
       </div>
-      <div>
+      <div style={{ height: "100%", width: "100%" }}>
         {displayType === "barGraph" && data && (
           <GraphComponent
             data={data}
@@ -99,11 +97,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({
           />
         )}
         {displayType === "lineGraph" && data && (
-          <LineGraphComponent
-            data={data}
-            width={tile.w * 200}
-            height={tile.h * 300}
-          />
+          <LineGraphComponent data={data} />
         )}
         {displayType === "gauge" && data && (
           <GaugeComponent

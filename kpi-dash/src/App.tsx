@@ -266,39 +266,46 @@ const MyGrid: React.FC = () => {
         {layout.map((item, index) => (
           <div key={index} className="grid-item">
             <div
-              className="tile-content"
-              style={{ position: "relative" }}
-            ></div>
-            <div
-              className="remove"
-              onMouseDown={handleMouseDown}
-              onMouseUp={handleMouseUp}
-              onClick={() => {
-                removeItem(item);
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              X
+              <p style={{ margin: 1 }}>{item.id}</p>
+              <div
+                className="remove"
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
+                onClick={() => {
+                  removeItem(item);
+                }}
+              >
+                X
+              </div>
             </div>
-            <div className="tile-content">
-              <h2>
-                {item.id}{" "}
-                <div
-                  style={{
-                    position: "relative",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    display: "flex",
-                  }}
-                >
-                  <DisplayData
-                    tile={item}
-                    data={ids.find((data) => data.id === item.id)?.data}
-                    updateTileRepresentation={updateTileRepresentation}
-                    updateTileDataset={updateTileDataset}
-                    updateTileData={updateTileData}
-                  />
-                </div>
-              </h2>
+            <div
+              className="tile-content"
+              style={{ width: "90%", height: "90%" }}
+            >
+              <div
+                style={{
+                  position: "relative",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  display: "flex",
+                  height: "100%",
+                  width: "100%",
+                }}
+              >
+                <DisplayData
+                  tile={item}
+                  data={ids.find((data) => data.id === item.id)?.data}
+                  updateTileRepresentation={updateTileRepresentation}
+                  updateTileDataset={updateTileDataset}
+                  updateTileData={updateTileData}
+                />
+              </div>
             </div>
           </div>
         ))}
