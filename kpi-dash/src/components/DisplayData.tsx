@@ -6,6 +6,7 @@ import NumberComponent from "./NumberComponent";
 import LineGraphComponent from "./LineGraphComponent";
 import GraphComponent from "./BarGraphComponent";
 import { Tile } from "../../backend/Types";
+import { useEffect } from "react";
 
 interface DisplayDataProps {
   tile: Tile;
@@ -19,6 +20,10 @@ const DisplayData: React.FC<DisplayDataProps> = ({
   data,
 }) => {
   const [displayType, setDisplayType] = useState(tile.representation);
+
+  useEffect(() => {
+    setDisplayType(tile.representation);
+  }, [tile.representation]);
 
   const handleDisplayTypeChange = (
     event: React.ChangeEvent<HTMLSelectElement>

@@ -17,6 +17,7 @@ const MyGrid: React.FC = () => {
   const [ids, setIds] = useState<Array<TileData>>([]);
 
   const [config, setConfig] = useState<Config | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const onLayoutChange = async (newLayoutArg: any) => {
     const newLayout = newLayoutArg.map((item: any, index: number) => {
@@ -41,9 +42,9 @@ const MyGrid: React.FC = () => {
       const parsedConfig: Config = YAML.parse(configString);
 
       // Map the ids to the tiles
-      const tilesWithIds = parsedConfig.tiles.map((tile, index) => ({
+      const tilesWithIds = parsedConfig.tiles.map((tile) => ({
         ...tile,
-        id: `n${index}`,
+        id: tile.id,
       }));
 
       setConfig(parsedConfig);
@@ -57,6 +58,7 @@ const MyGrid: React.FC = () => {
       );
 
       setLayout(tilesWithIds);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error loading config", error);
     }
@@ -84,10 +86,11 @@ const MyGrid: React.FC = () => {
   // Logic to remove a Tile from the Layout
   const removeItem = async (tile: Tile) => {
     setLayout((prevLayout) => {
-      const newLayout = prevLayout.filter((item) => item.i !== tile.i);
+      const newLayout = prevLayout.filter((item) => item.id !== tile.id);
 
-      // setIds((prevIds) => prevIds.filter((id) => id !== tile.id));
-      setIds((prevIds) => prevIds.filter((tileData) => tileData.id !== tile.i));
+      setIds((prevIds) =>
+        prevIds.filter((tileData) => tileData.id !== tile.id)
+      );
       return newLayout;
     });
   };
@@ -141,22 +144,20 @@ const MyGrid: React.FC = () => {
   };
 
   const updateTileRepresentation = (
-    tileId: string,
+    tileIndex: string,
     newRepresentation: string
   ) => {
+    const index = parseInt(tileIndex, 10);
+
     setIds((prevIds) =>
-      prevIds.map((item) =>
-        item.id === `n${tileId}`
-          ? { ...item, representation: newRepresentation }
-          : item
+      prevIds.map((item, i) =>
+        i === index ? { ...item, representation: newRepresentation } : item
       )
     );
 
     setLayout((prevLayout) =>
-      prevLayout.map((tile) =>
-        tile.id === `n${tileId}`
-          ? { ...tile, representation: newRepresentation }
-          : tile
+      prevLayout.map((tile, i) =>
+        i === index ? { ...tile, representation: newRepresentation } : tile
       )
     );
   };
@@ -171,7 +172,10 @@ const MyGrid: React.FC = () => {
 
   useEffect(() => {
     const storeConfigAsync = async () => {
-      console.log("Storing Config", layout);
+      if (layout.length === 0 && isLoading) {
+        return;
+      }
+
       const newConfig = {
         tiles: layout,
       };
@@ -180,11 +184,9 @@ const MyGrid: React.FC = () => {
       await storeConfig(newConfig);
     };
 
-    if (layout.length > 0) {
-      console.log("Storing Config");
-      storeConfigAsync();
-    }
-  }, [layout]);
+    console.log("Storing Config");
+    storeConfigAsync();
+  }, [layout, isLoading]);
 
   if (!config) {
     loadConfig();
