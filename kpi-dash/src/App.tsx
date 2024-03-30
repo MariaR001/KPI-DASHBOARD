@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Responsive, WidthProvider } from "react-grid-layout";
-import { Config } from "../backend/Types";
-import { Tile } from "../backend/Types";
+import { Config, Tile, TileData } from "../backend/Types";
 import YAML from "yaml";
 
 import "react-grid-layout/css/styles.css";
@@ -13,85 +12,153 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const MyGrid: React.FC = () => {
   const [isDraggable, setIsDraggable] = useState(true);
-  const [config, setConfig] = useState<Config | null>(null);
   const [layout, setLayout] = useState<Tile[]>([]);
-  const [counter, setCounter] = useState(layout.length);
 
-  const onLayoutChange = async (newLayout: any) => {
-    if (!newLayout) {
-      return;
-    }
+  const [ids, setIds] = useState<Array<TileData>>([]);
 
-    const newConfig: Config = {
-      tiles: newLayout.map((item: any, index: number) => ({
-        i: layout[index].i,
-        x: item.x,
-        y: item.y,
-        w: item.w,
-        h: item.h,
-        representation: layout[index].representation,
-        dataset: layout[index].dataset,
-      })),
-    };
+  const [config, setConfig] = useState<Config | null>(null);
 
-    await setConfig(newConfig);
-    await storeConfig(newConfig);
+  const onLayoutChange = async (newLayoutArg: any) => {
+    const newLayout = newLayoutArg.map((item: any, index: number) => {
+      const tileData = ids[index];
+      return {
+        ...item,
+        id: tileData.id,
+        representation: tileData.representation,
+        dataset: tileData.dataset,
+      };
+    });
+
+    setLayout(newLayout);
   };
 
+  // Fetches and Loads the layout and the tiles from the yaml file in the backend
   const loadConfig = async () => {
     try {
       const response = await fetch("http://localhost:3002/config");
       const configString = await response.text();
 
-      const config: Config = YAML.parse(configString);
-      setConfig(config);
-      setLayout(config.tiles);
+      const parsedConfig: Config = YAML.parse(configString);
+
+      // Map the ids to the tiles
+      const tilesWithIds = parsedConfig.tiles.map((tile, index) => ({
+        ...tile,
+        id: `n${index}`,
+      }));
+
+      setConfig(parsedConfig);
+
+      setIds(
+        tilesWithIds.map((tile) => ({
+          id: tile.id,
+          representation: tile.representation,
+          dataset: "", // Set this to the initial dataset value
+        }))
+      );
+
+      setLayout(tilesWithIds);
     } catch (error) {
       console.error("Error loading config", error);
     }
   };
 
+  // Stores the current configuration of the tiles in the yaml file in the backend
   const storeConfig = async (config: Config) => {
     try {
-      const configString = JSON.stringify(config);
-      await fetch("http://localhost:3002/config", {
+      const response = await fetch("http://localhost:3002/config", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: configString,
+        body: JSON.stringify(config),
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
     } catch (error) {
       console.error("Error storing config", error);
     }
   };
 
-  const removeItem = (i: string) => {
-    setLayout((prevLayout) => prevLayout.filter((item) => item.i !== i));
+  // Logic to remove a Tile from the Layout
+  const removeItem = async (tile: Tile) => {
+    setLayout((prevLayout) => {
+      const newLayout = prevLayout.filter((item) => item.i !== tile.i);
+
+      // setIds((prevIds) => prevIds.filter((id) => id !== tile.id));
+      setIds((prevIds) => prevIds.filter((tileData) => tileData.id !== tile.i));
+      return newLayout;
+    });
   };
 
-  const addItem = () => {
-    let newCounter = counter;
-    const isIndexInUse = (item: any) => item.i === newCounter;
+  // Logic to add a Tile to the Layout
+  const addItem = async () => {
+    const columns = 6;
+    const columnHeights = new Array(columns).fill(0);
 
-    while (layout.some(isIndexInUse)) {
-      newCounter++;
+    layout.forEach((item) => {
+      for (let i = item.x; i < item.x + item.w; i++) {
+        columnHeights[i] = Math.max(columnHeights[i], item.y + item.h);
+      }
+    });
+
+    const x = columnHeights.indexOf(Math.min(...columnHeights));
+    const y = columnHeights[x];
+
+    let newId: string;
+    if (layout.length === 0) {
+      newId = "n0";
+    } else {
+      const maxId = Math.max(
+        ...layout.map((tile) => parseInt(tile.id.replace("n", "")))
+      );
+      newId = `n${maxId + 1}`;
     }
 
     const newItem = {
-      i: newCounter as unknown as string,
-      x: (layout.length * 2) % 12,
-      y: Infinity,
-      w: 2,
-      h: 2,
+      i: layout.length.toString(),
+      id: newId,
+      x: x,
+      y: y,
+      w: 1,
+      h: 1,
       representation: "",
       dataset: "",
-    } as Tile;
+    };
 
-    const newLayout = [...layout, newItem];
+    setLayout((prevLayout) => {
+      const newLayout = [...prevLayout, newItem];
 
-    setCounter(counter + 1);
-    setLayout(newLayout);
+      return newLayout;
+    });
+
+    // setIds((prevIds) => [...prevIds, newItem.id]);
+    setIds((prevIds) => [
+      ...prevIds,
+      { id: newId, representation: "", dataset: "" },
+    ]);
+  };
+
+  const updateTileRepresentation = (
+    tileId: string,
+    newRepresentation: string
+  ) => {
+    setIds((prevIds) =>
+      prevIds.map((item) =>
+        item.id === `n${tileId}`
+          ? { ...item, representation: newRepresentation }
+          : item
+      )
+    );
+
+    setLayout((prevLayout) =>
+      prevLayout.map((tile) =>
+        tile.id === `n${tileId}`
+          ? { ...tile, representation: newRepresentation }
+          : tile
+      )
+    );
   };
 
   const handleMouseDown = () => {
@@ -101,6 +168,23 @@ const MyGrid: React.FC = () => {
   const handleMouseUp = () => {
     setIsDraggable(true);
   };
+
+  useEffect(() => {
+    const storeConfigAsync = async () => {
+      console.log("Storing Config", layout);
+      const newConfig = {
+        tiles: layout,
+      };
+
+      setConfig(newConfig);
+      await storeConfig(newConfig);
+    };
+
+    if (layout.length > 0) {
+      console.log("Storing Config");
+      storeConfigAsync();
+    }
+  }, [layout]);
 
   if (!config) {
     loadConfig();
@@ -119,30 +203,43 @@ const MyGrid: React.FC = () => {
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
         cols={{ lg: 6, md: 6, sm: 3, xs: 2, xxs: 1 }}
         rowHeight={180}
-        onLayoutChange={onLayoutChange}
         isDraggable={isDraggable}
         compactType={null}
+        onLayoutChange={onLayoutChange}
       >
-        {layout?.map((item, index) => (
+        {layout.map((item, index) => (
           <div key={index} className="grid-item">
-            <div className="tile-content" style={{ position: "relative" }}>
-            </div>
+            <div
+              className="tile-content"
+              style={{ position: "relative" }}
+            ></div>
             <div
               className="remove"
               onMouseDown={handleMouseDown}
               onMouseUp={handleMouseUp}
-              onClick={(e) => {
-                e.stopPropagation();
-                removeItem(item.i);
+              onClick={() => {
+                removeItem(item);
               }}
             >
               X
             </div>
-            <div
-              className="tile-content" >
+            <div className="tile-content">
               <h2>
-                Tile {item.i} <div style={{ position: "relative", justifyContent:"center", alignItems: "center", display:"flex" }}><DisplayData /></div>
-              </h2>    
+                {item.id}{" "}
+                <div
+                  style={{
+                    position: "relative",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    display: "flex",
+                  }}
+                >
+                  <DisplayData
+                    tile={item}
+                    updateTileRepresentation={updateTileRepresentation}
+                  />
+                </div>
+              </h2>
             </div>
           </div>
         ))}

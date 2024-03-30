@@ -1,5 +1,6 @@
 type Tile = {
   i: string;
+  id: string;
   x: number;
   y: number;
   w: number;
@@ -12,4 +13,9 @@ type Config = {
   tiles: Tile[];
 };
 
-export type { Tile, Config };
+type TileData = {
+  id: string;
+  representation: string;
+  dataset: string;
+};
+export type { Tile, Config, TileData };
