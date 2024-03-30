@@ -43,10 +43,14 @@ const MyGrid: React.FC = () => {
 
       const tilesWithIds = await Promise.all(
         parsedConfig.tiles.map(async (tile) => {
-          const fileResponse = await fetch(
-            `http://localhost:3002/file/${tile.dataset}`
-          );
-          const fileData = await fileResponse.json();
+          let fileData = null;
+
+          if (tile.dataset) {
+            const fileResponse = await fetch(
+              `http://localhost:3002/file/${tile.dataset}`
+            );
+            fileData = await fileResponse.json();
+          }
 
           return {
             ...tile,

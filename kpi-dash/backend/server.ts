@@ -1,10 +1,9 @@
 import express from "express";
 import YAML from "js-yaml";
 import cors from "cors";
-import * as fs from "fs";
+import fs from "fs-extra";
 import multer from "multer";
 import path from "path";
-import mkdirp from "mkdirp";
 
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -59,15 +58,16 @@ app.post(
     try {
       const file = req.file;
       const tileId = req.body.tileId;
-      const data = JSON.parse(fs.readFileSync(file.path, "utf8"));
-
-      // Create a directory for the tile if it doesn't exist
-      const tileDirectory = path.join(__dirname, "uploads", tileId);
-      await mkdirp(tileDirectory);
+      const data = JSON.parse(await fs.readFile(file.path, "utf8"));
 
       // Move the file to the tile's directory
-      const newFilePath = path.join(tileDirectory, file.originalname);
-      fs.renameSync(file.path, newFilePath);
+      const newFilePath = path.join(
+        __dirname,
+        "uploads",
+        tileId,
+        file.originalname
+      );
+      await fs.move(file.path, newFilePath, { overwrite: true });
 
       res.json({
         message: "File uploaded successfully",
