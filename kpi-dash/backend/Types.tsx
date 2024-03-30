@@ -17,5 +17,6 @@ type TileData = {
   id: string;
   representation: string;
   dataset: string;
+  data: any;
 };
 export type { Tile, Config, TileData };

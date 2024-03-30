@@ -82,8 +82,13 @@ app.post(
 );
 
 // GET /file/:filePath
-app.get("/file/:filePath", (req, res) => {
-  const filePath = path.join(__dirname, "uploads", req.params.filePath);
+app.get("/file/:dir/:filePath", (req, res) => {
+  const filePath = path.join(
+    __dirname,
+    "uploads",
+    req.params.dir,
+    req.params.filePath
+  );
   fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
       console.error("Error reading file", err);

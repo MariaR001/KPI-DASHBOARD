@@ -27,8 +27,11 @@ const MyGrid: React.FC = () => {
         id: tileData.id,
         representation: tileData.representation,
         dataset: tileData.dataset,
+        data: tileData.data,
       };
     });
+
+    console.log("Layout Changed", newLayout);
 
     setLayout(newLayout);
   };
@@ -46,8 +49,12 @@ const MyGrid: React.FC = () => {
           let fileData = null;
 
           if (tile.dataset) {
+            const relativeFilePath = tile.dataset.replace(
+              /^.*[\\/]uploads[\\/]/,
+              ""
+            );
             const fileResponse = await fetch(
-              `http://localhost:3002/file/${tile.dataset}`
+              `http://localhost:3002/file/${relativeFilePath}`
             );
             fileData = await fileResponse.json();
           }
@@ -55,7 +62,8 @@ const MyGrid: React.FC = () => {
           return {
             ...tile,
             id: tile.id,
-            dataset: fileData,
+            dataset: tile.dataset,
+            data: fileData,
           };
         })
       );
@@ -67,6 +75,7 @@ const MyGrid: React.FC = () => {
           id: tile.id,
           representation: tile.representation,
           dataset: tile.dataset,
+          data: tile.data,
         }))
       );
 
@@ -152,7 +161,7 @@ const MyGrid: React.FC = () => {
     // setIds((prevIds) => [...prevIds, newItem.id]);
     setIds((prevIds) => [
       ...prevIds,
-      { id: newId, representation: "", dataset: "" },
+      { id: newId, representation: "", dataset: "", data: {} },
     ]);
   };
 
@@ -191,6 +200,22 @@ const MyGrid: React.FC = () => {
     );
   };
 
+  const updateTileData = (tileIndex: string, newData: any) => {
+    const index = parseInt(tileIndex, 10);
+
+    setIds((prevIds) =>
+      prevIds.map((item, i) =>
+        i === index ? { ...item, data: newData } : item
+      )
+    );
+
+    setLayout((prevLayout) =>
+      prevLayout.map((tile, i) =>
+        i === index ? { ...tile, data: newData } : tile
+      )
+    );
+  };
+
   const handleMouseDown = () => {
     setIsDraggable(false);
   };
@@ -220,69 +245,6 @@ const MyGrid: React.FC = () => {
   if (!config) {
     loadConfig();
   }
-
-  const data = {
-    numberTextEmojiData: { value: 95, title: "Sample Number Display" },
-    gaugeComponentValue: { value: 0.75, title: "Sample Gauge Display" },
-    listComponentData: {
-      items: [
-        { label: "Item 1", value: 10 },
-        { label: "Item 2", value: 20 },
-        { label: "Item 3", value: 30 },
-      ],
-    },
-    tableComponentData: {
-      title: "Sample Table",
-      columns: [
-        { label: "Name", key: "name" },
-        { label: "Age", key: "age" },
-      ],
-      rows: [
-        { name: "John", age: 30 },
-        { name: "Jane", age: 25 },
-        { name: "Doe", age: 40 },
-      ],
-    },
-    barGraphData: {
-      title: "Sample Bar Graph",
-      xAxisTitle: "Months",
-      yAxisTitle: "Sales",
-      data: [
-        { name: "Jan", value: 100 },
-        { name: "Feb", value: 150 },
-        { name: "Mar", value: 200 },
-        { name: "Apr", value: 250 },
-        { name: "May", value: 300 },
-        { name: "Jun", value: 350 },
-        { name: "Jul", value: 400 },
-        { name: "Aug", value: 450 },
-        { name: "Sep", value: 500 },
-        { name: "Oct", value: 550 },
-        { name: "Nov", value: 600 },
-        { name: "Dec", value: 650 },
-      ],
-    },
-    linegraphData: {
-      title: "Sample Line Graph",
-      data: [
-        { name: "Jan", value: 100 },
-        { name: "Feb", value: 150 },
-        { name: "Mar", value: 200 },
-        { name: "Apr", value: 250 },
-        { name: "May", value: 300 },
-        { name: "Jun", value: 350 },
-        { name: "Jul", value: 400 },
-        { name: "Aug", value: 450 },
-        { name: "Sep", value: 500 },
-        { name: "Oct", value: 550 },
-        { name: "Nov", value: 600 },
-        { name: "Dec", value: 650 },
-      ],
-      lineKey: "value",
-      xAxisTitle: "Months",
-      yAxisTitle: "Sales",
-    },
-  };
 
   return (
     <div className="dashboard">
@@ -330,8 +292,10 @@ const MyGrid: React.FC = () => {
                 >
                   <DisplayData
                     tile={item}
+                    data={ids.find((data) => data.id === item.id)?.data}
                     updateTileRepresentation={updateTileRepresentation}
                     updateTileDataset={updateTileDataset}
+                    updateTileData={updateTileData}
                   />
                 </div>
               </h2>
