@@ -16,5 +16,5 @@
     "noEmit": false,
     "jsx": "react-jsx"
   },
-  "include": ["src", "backend/Types.tsx"]
+  "include": ["src", "backend/Types.tsx", "declarations.d.ts"]
 }
