@@ -93,34 +93,10 @@ const DisplayData: React.FC<DisplayDataProps> = ({
         {displayType === "lineGraph" && data && (
           <LineGraphComponent data={data} />
         )}
-        {displayType === "gauge" && data && (
-          <GaugeComponent
-            data={data}
-            width={tile.w * 100}
-            height={tile.h * 100}
-          />
-        )}
-        {displayType === "table" && data && (
-          <TableComponent
-            data={data}
-            width={tile.w * 100}
-            height={tile.h * 100}
-          />
-        )}
-        {displayType === "list" && data && (
-          <ListComponent
-            data={data}
-            width={tile.w * 100}
-            height={tile.h * 100}
-          />
-        )}
-        {displayType === "number" && data && (
-          <NumberComponent
-            data={data}
-            width={tile.w * 100}
-            height={tile.h * 100}
-          />
-        )}
+        {displayType === "gauge" && data && <GaugeComponent data={data} />}
+        {displayType === "table" && data && <TableComponent data={data} />}
+        {displayType === "list" && data && <ListComponent data={data} />}
+        {displayType === "number" && data && <NumberComponent data={data} />}
       </div>
     </div>
   );
