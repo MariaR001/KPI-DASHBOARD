@@ -1,6 +1,6 @@
 {
   "name": "react-kpi-dashboard",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "type": "module",
   "types": "declarations.d.ts",
   "module": "src/App.tsx",
