@@ -1,13 +1,12 @@
 {
   "name": "react-kpi-dashboard",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "type": "module",
   "types": "declarations.d.ts",
   "module": "src/App.tsx",
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "react-grid-layout": "github:react-grid-layout/react-grid-layout",
     "react-gauge-chart": "^0.4.1",
     "react-table": "^7.8.0",
     "recharts": "^2.12.3"
@@ -23,9 +22,10 @@
     "cors": "^2.8.5",
     "fs-extra": "^11.2.0",
     "multer": "^1.4.5-lts.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "react-gauge-chart": "^0.4.1",
+    "react-grid-layout": "^1.4.4",
     "react-scripts": "5.0.1",
     "react-table": "^7.8.0",
     "recharts": "^2.12.3",
